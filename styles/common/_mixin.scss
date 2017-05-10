@@ -1,0 +1,46 @@
+@mixin header-gradient {
+  @include custom-gradient($header-gradient-color, $header-bg-color, 0%, 0%);
+}
+
+@mixin default-gradient {
+  @include custom-gradient($default-gradient-color, $default-bg-color, 0%, 0%);
+}
+
+@mixin hover-gradient {
+  @include custom-gradient($hover-gradient-color, $hover-bg-color, 0%, 0%);
+}
+
+@mixin active-gradient {
+  @include custom-gradient($active-gradient-color, $active-bg-color, 0%, 0%);
+}
+
+@mixin custom-gradient($gradientbg, $bgcolor, $light, $dark) {
+  @if ($gradientbg == none) {
+    $gradient: null;
+    background: $bgcolor;
+  }
+  @else {
+    $gradient: ();
+    @each $color in $gradientbg {
+      $value: null;
+      @if (lightness($color) > 50) {
+        $value: darken($color, $dark);
+      }
+      @else {
+        $value: lighten($color, $light);
+      }
+      $gradient: append($gradient, $value, 'comma');
+    }
+    background: $bgcolor;
+    background: linear-gradient(to bottom, $gradient);
+  }
+}
+
+$imported-modules: () !default;
+
+@mixin export-module($module) {
+  @if (index($imported-modules, $module) == null) {
+    $imported-modules: append($imported-modules, $module) !global;
+    @content;
+  }
+}

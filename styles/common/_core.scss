@@ -1,0 +1,205 @@
+@include export-module('base-core') {
+  /*! common core */
+  .e-control {
+    font-family: $font-family;
+    font-size: $font-size;
+    font-weight: $font-weight;
+  }
+
+  .e-overlay {
+    background-color: $overlay-bg-color;
+    filter: alpha(opacity=50);
+    height: 100%;
+    opacity: .5;
+    pointer-events: none;
+    touch-action: none;
+    width: 100%;
+  }
+
+  .e-hidden {
+    display: none;
+  }
+
+  .e-reset {
+    border: 0;
+    font-size: 100%;
+    line-height: normal;
+    list-style: none;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+    text-decoration: none;
+  }
+
+  .e-disabled {
+    background-image: none;
+    cursor: default;
+    filter: alpha(Opacity=35);
+    opacity: .35;
+  }
+
+  .e-ul {
+    list-style-type: none;
+  }
+
+  .e-front {
+    z-index: 100;
+  }
+
+  .e-header {
+    display: table;
+    font-weight: bold;
+    height: 45px;
+    width: 100%;
+    z-index: 10001;
+  }
+
+  .e-view {
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .e-header .e-text {
+    line-height: 45px;
+    text-indent: 15px;
+  }
+
+  .e-header > * {
+    display: table-cell;
+  }
+
+  .e-has-header > .e-view {
+    top: 45px;
+  }
+
+  .e-control:focus,
+  .e-control *:focus {
+    outline: none;
+  }
+
+  .e-clearfix {
+    min-height: 0;
+  }
+
+  .e-clearfix::before,
+  .e-clearfix::after {
+    border-collapse: collapse;
+    content: '';
+    display: table;
+    line-height: 0;
+  }
+
+  .e-clearfix::after {
+    clear: both;
+  }
+
+  .e-prevent-select {
+    user-select: none;
+  }
+
+  .e-in-wrap {
+    border: 1px solid;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .e-rtl {
+    direction: rtl;
+  }
+
+  .e-control,
+  .e-control [class^='e-'],
+  .e-control [class*=' e-'] {
+    box-sizing: border-box;
+  }
+
+  $place-holder: #bbb;
+
+  .e-control .e-input.e-placeholder {
+    color: $place-holder;
+    font-style: italic;
+    position: absolute;
+    top: 0;
+    white-space: nowrap;
+  }
+
+  .e-textbox {
+    height: 30px;
+    line-height: 1.908em\9;
+    outline: medium none;
+    padding-left: .857em;
+    width: 100%;
+  }
+
+  .e-header {
+    background: $header-bg-color;
+    border: $header-border-color;
+    color: $header-font-color;
+  }
+
+  .e-content {
+    background: $content-bg-color;
+    color: $content-font-color;
+  }
+
+  .e-default {
+    background: $default-bg-color;
+    color: $default-font-color;
+  }
+
+  .e-hover {
+    background: $hover-bg-color;
+    color: $hover-font-color;
+  }
+
+  .e-active {
+    background: $active-bg-color;
+    color: $active-font-color;
+  }
+
+  .e-error {
+    color: $error-font-color;
+  }
+
+  .e-warning {
+    color: $warning-font-color;
+  }
+
+  .e-success {
+    color: $success-font-color;
+  }
+
+  .e-information {
+    color: $information-font-color;
+  }
+
+  .e-block-touch {
+    touch-action: pinch-zoom;
+  }
+
+  // TextAlign
+  @mixin e-textalign {
+    @each $align in left, right, center, justify {
+      .e-text-#{$align} {
+        text-align: $align;
+      }
+    }
+  }
+  @include e-textalign;
+
+  .e-shadow {
+    box-shadow: 0 0 9px $shadow-color;
+  }
+
+  .e-textwrap {
+    height: auto;
+    line-height: 18px;
+    white-space: normal;
+  }
+}
