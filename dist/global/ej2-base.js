@@ -1578,8 +1578,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                         browserInfo.name = 'msie';
                         break;
                     }
-                    if (browserInfo.name === 'safari') {
-                        browserInfo.version = Browser.userAgent.match(REGX_VERSION)[2];
+                    var version = Browser.userAgent.match(REGX_VERSION);
+                    if (browserInfo.name === 'safari' && version) {
+                        browserInfo.version = version[2];
                     }
                     break;
                 }
