@@ -5,12 +5,7 @@ import '../../node_modules/es6-promise/dist/es6-promise';
 import { cldrData } from '../../src/internationalization';
 import { NumberFormat } from '../../src/Internationalization/number-formatter';
 import { IntlBase } from '../../src/Internationalization/intl-base';
-import { loadCultureFiles } from './date-parser.spec';
 let numberFormat: NumberFormat = new NumberFormat();
-loadCultureFiles('', true);
-loadCultureFiles('ar-QA');
-loadCultureFiles('ja');
-loadCultureFiles('de');
 describe('Number formatter', () => {
     let formatter: Function;
     let result: string;

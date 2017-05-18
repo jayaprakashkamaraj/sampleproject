@@ -3,13 +3,10 @@
  */
 import { DateFormat } from '../../src/Internationalization/date-formatter';
 import { DateParser } from '../../src/Internationalization/date-parser';
-import { loadCultureFiles, dateMatched, dupCulObject } from './date-parser.spec';
+import { dateMatched, dupCulObject } from './date-parser.spec';
 import { loadCldr, cldrData } from '../../src/internationalization';
 import { ParserBase } from '../../src/Internationalization/parser-base';
-loadCultureFiles('', true);
-loadCultureFiles('ar-QA');
-loadCultureFiles('ja');
-loadCultureFiles('da');
+
 loadCldr(dupCulObject, {});
 const parseCultures: string[] = ['en', 'ar-QA', 'ja'];
 function getTimeZoneString(date: Date, ishour?: boolean): string {

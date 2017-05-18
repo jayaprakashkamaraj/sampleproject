@@ -125,6 +125,8 @@ export function loadCultureFiles(name: string, base?: boolean): void {
 loadCultureFiles('', true);
 loadCultureFiles('ar-QA');
 loadCultureFiles('ja');
+loadCultureFiles('da');
+loadCultureFiles('de')
 export function monthDayMatch(date1: Date, date2: Date): boolean {
     return date1.toLocaleDateString() === date2.toLocaleDateString()
 }
