@@ -43,3 +43,9 @@ function startKarma(done) {
         }
     }).start();
 }
+
+/**
+ * Run test scripts
+ */
+gulp.task('test', function(done) {
+});
