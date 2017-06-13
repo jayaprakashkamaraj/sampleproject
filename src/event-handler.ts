@@ -145,6 +145,7 @@ interface EventOptions {
 
 /**
  * Common Event argument for all base Essential JavaScript 2 Events.
+ * @private
  */
 export interface BaseEventArgs {
     /**

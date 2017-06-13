@@ -250,7 +250,7 @@ export function createInstance(classFunction: Function, params: any[]): any {
     }
     /**
      * To throw custom error message.
-     * @param{string} - Specifies the error message to be throwned.
+     * @param{string} - Specifies the error message to be thrown.
      */
     export  function throwError(message: string): void {
         try {

@@ -47,6 +47,7 @@ const timeSeparator: string = 'timeSeparator';
 
 /**
  * Date Format is a framework provides support for date formatting.
+ * @private
  */
 export class DateFormat {
 

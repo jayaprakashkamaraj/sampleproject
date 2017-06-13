@@ -73,6 +73,7 @@ interface ValuePosition {
 }
 /**
  * Date Parser.
+ * @private
  */
 
 export class DateParser {

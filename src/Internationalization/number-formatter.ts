@@ -4,6 +4,7 @@ import { IntlBase as base } from './intl-base';
 import { ParserBase as parser, NumberMapper } from './parser-base';
 /**
  * Interface for default formatting options
+ * @private
  */
 export interface FormatParts extends base.NumericSkeleton, NumberFormatOptions {
     groupOne?: boolean;
@@ -52,6 +53,7 @@ const infinity: string = 'infinity';
 const nan: string = 'nan';
 /**
  * Module for number formatting.
+ * @private
  */
 export class NumberFormat {
     /**

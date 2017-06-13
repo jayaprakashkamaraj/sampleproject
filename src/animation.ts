@@ -255,6 +255,7 @@ export class Animation extends Base<HTMLElement> implements INotifyPropertyChang
 
 /**
  * Animation event argument for progress event handler
+ * @private
  */
 export interface AnimationOptions extends AnimationModel {
     /**

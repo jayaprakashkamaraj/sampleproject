@@ -16,6 +16,7 @@ export let rightToLeft: boolean = false;
 
 /**
  * Interface for dateFormatOptions 
+ * @private
  */
 export interface DateFormatOptions {
     /**
@@ -33,6 +34,7 @@ export interface DateFormatOptions {
 }
 /**
  * Interface for numberFormatOptions
+ * @private
  */
 export interface NumberFormatOptions {
     /**

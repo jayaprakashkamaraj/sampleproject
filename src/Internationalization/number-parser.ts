@@ -32,6 +32,7 @@ interface NumberParseOptions {
 
 /**
  * Module for Number Parser.
+ * @private
  */
 export class NumberParser {
     /**

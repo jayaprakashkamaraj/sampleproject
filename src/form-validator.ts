@@ -7,6 +7,7 @@ import { Property, NotifyPropertyChanges, INotifyPropertyChanged, Event } from '
 
 /**
  * ErrorOption values
+ * @private
  */
 export enum ErrorOption {
     Message,

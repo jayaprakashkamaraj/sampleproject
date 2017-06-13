@@ -340,6 +340,7 @@ interface Points {
 
 /**
  * The argument type of `Tap` Event
+ * @private
  */
 export interface TapEventArgs extends BaseEventArgs {
     /**
@@ -350,6 +351,7 @@ export interface TapEventArgs extends BaseEventArgs {
 
 /**
  * The argument type of `Scroll` Event
+ * @private
  */
 export interface ScrollEventArgs extends BaseEventArgs {
     /**
@@ -388,6 +390,7 @@ export interface ScrollEventArgs extends BaseEventArgs {
 
 /**
  * The argument type of `Swipe` Event
+ * @private
  */
 export interface SwipeEventArgs extends BaseEventArgs {
     /**
