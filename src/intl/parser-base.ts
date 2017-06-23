@@ -84,7 +84,9 @@ export class ParserBase {
         let propKeys: string[] | number[] = keys || Object.keys(prop);
         let res: Object = {};
         for (let key of propKeys) {
-            res[prop[key]] = key;
+            if (!res.hasOwnProperty(prop[key])) {
+                res[prop[key]] = key;
+            }
         }
         return res;
     }

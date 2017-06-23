@@ -126,7 +126,8 @@ loadCultureFiles('', true);
 loadCultureFiles('ar-QA');
 loadCultureFiles('ja');
 loadCultureFiles('da');
-loadCultureFiles('de')
+loadCultureFiles('de');
+loadCultureFiles('zh');
 export function monthDayMatch(date1: Date, date2: Date): boolean {
     return date1.toLocaleDateString() === date2.toLocaleDateString()
 }
@@ -540,6 +541,18 @@ describe('DateParser', () => {
         it('', () => {
             let result: Date = DateParser.dateParser('en', { skeleton: 'H' }, cldrData)('12 PM');
             expect(result).toBeNull();
+        });
+    });
+    describe('Chinese Designator check', () => {
+        it('pm', () => {
+            let result: Date = DateParser.dateParser('zh', { format: 'y/M/d ah:mm'}, cldrData)('2017/6/7 下午9:00');
+            let nDate: Date = new Date(2017, 5, 7, 21);
+            expect(result.toDateString()).toBe(nDate.toDateString());
+        });
+        it('am', () => {
+            let result: Date = DateParser.dateParser('zh', { format: 'y/M/d ah:mm'}, cldrData)('2017/6/7 上午9:00');
+            let nDate: Date = new Date(2017, 5, 7, 9);
+            expect(result.toDateString()).toBe(nDate.toDateString());
         });
     });
     describe('functions', () => {
