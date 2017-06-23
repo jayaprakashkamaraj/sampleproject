@@ -1,8 +1,8 @@
-import { DateFormat } from './Internationalization/date-formatter';
-import { NumberFormat } from './Internationalization/number-formatter';
-import { DateParser } from './Internationalization/date-parser';
-import { NumberParser } from './Internationalization/number-parser';
-import { IntlBase } from './Internationalization/intl-base';
+import { DateFormat } from './intl/date-formatter';
+import { NumberFormat } from './intl/number-formatter';
+import { DateParser } from './intl/date-parser';
+import { NumberParser } from './intl/number-parser';
+import { IntlBase } from './intl/intl-base';
 import { extend, getValue } from './util';
 import { Observer } from './observer';
 /**

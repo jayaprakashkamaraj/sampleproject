@@ -10,7 +10,7 @@ const REGX_VERSION: RegExp = /(version)[ \/]([\w.]+)/i;
 const REGX_BROWSER: { [key: string]: RegExp } = {
     OPERA: /(opera|opr)(?:.*version|)[ \/]([\w.]+)/i,
     EDGE: /(edge)(?:.*version|)[ \/]([\w.]+)/i,
-    CHROME: /(chrome)[ \/]([\w.]+)/i,
+    CHROME: /(chrome|crios)[ \/]([\w.]+)/i,
     PANTHOMEJS: /(phantomjs)[ \/]([\w.]+)/i,
     SAFARI: /(safari)[ \/]([\w.]+)/i,
     WEBKIT: /(webkit)[ \/]([\w.]+)/i,
@@ -47,6 +47,7 @@ export class Browser {
             clientInfo = Browser.userAgent.match(REGX_BROWSER[key]);
             if (clientInfo) {
                 browserInfo.name = (clientInfo[1].toLowerCase() === 'opr' ? 'opera' : clientInfo[1].toLowerCase());
+                browserInfo.name = (clientInfo[1].toLowerCase() === 'crios' ? 'chrome' : browserInfo.name);
                 browserInfo.version = clientInfo[2];
                 browserInfo.culture.name = browserInfo.culture.language = navigator.language;
                 if (!!Browser.userAgent.match(REGX_IE11)) {

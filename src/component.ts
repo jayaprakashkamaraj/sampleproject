@@ -45,11 +45,12 @@ export abstract class Component<ElementType extends HTMLElement> extends Base<El
      * Destroys the sub modules while destroying the widget
      */
     protected destroy(): void {
+        this.localObserver.destroy();
+        if (this.refreshing) { return; }
         this.trigger('destroyed', { cancel: false });
         super.destroy();
-        onIntlChange.off('notifyExternalChange', this.detectFunction);
         this.moduleLoader.clean();
-        this.localObserver.destroy();
+        onIntlChange.off('notifyExternalChange', this.detectFunction);
         if (this.enablePersistence) {
             this.setPersistData();
         }
@@ -58,10 +59,14 @@ export abstract class Component<ElementType extends HTMLElement> extends Base<El
      * Apply all the pending property changes and render the component again
      */
     public refresh(): void {
+        this.refreshing = true;
+        this.destroy();
         this.clearChanges();
+        this.localObserver = new Observer(this);
         this.preRender();
         this.injectModules();
         this.render();
+        this.refreshing = false;
     }
     /**
      * Append the control within the given HTML Element

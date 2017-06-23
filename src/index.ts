@@ -25,4 +25,4 @@ export * from './svg-canvas-interface';
 export * from './svg-renderer';
 export * from './touch';
 export * from './touch-model';
-export * from './template';
+export * from './template-engine';

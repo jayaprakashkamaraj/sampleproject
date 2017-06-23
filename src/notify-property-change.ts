@@ -111,18 +111,24 @@ function getObjectArray<T>(
     instance: ClassObject & Object,
     curKey: string,
     defaultValue: Object[],
-    type: (...arg: Object[]) => void,
-    isSetter?: boolean
+    type: (...arg: Object[]) => Object,
+    isSetter?: boolean,
+    isFactory?: boolean
 ): Object[] {
+
     let result: Object[] = [];
     let len: Number = defaultValue.length;
     for (let i: number = 0; i < len; i++) {
+        let curType: (...arg: Object[]) => void = type;
+        if (isFactory) {
+            curType = <(...arg: Object[]) => void>type(defaultValue[i]);
+        }
         if (isSetter) {
-            let inst: ClassObject = createInstance(type, [instance, curKey, {}, true]);
+            let inst: ClassObject = createInstance(curType, [instance, curKey, {}, true]);
             inst.setProperties(defaultValue[i], true);
             result.push(inst);
         } else {
-            result.push(createInstance(type, [instance, curKey, defaultValue[i], true]));
+            result.push(createInstance(curType, [instance, curKey, defaultValue[i], true]));
         }
     }
     return result;
@@ -172,20 +178,42 @@ function complexSetter(defaultValue: Object, curKey: string, type: (...arg: Obje
     };
 }
 
-function complexArrayGetter(defaultValue: Object[], curKey: string, type: (...arg: Object[]) => void): () => void {
+function complexFactorySetter(
+    defaultValue: Object,
+    curKey: string,
+    type: (...arg: Object[]) => Object): (arg: Object) => void {
+    return function (newValue: Object): void {
+        let curType: (...arg: Object[]) => void = <(...arg: Object[]) => void>type(newValue);
+        getObject(this, curKey, defaultValue, curType).setProperties(newValue);
+    };
+}
+
+function complexArrayGetter(defaultValue: Object[], curKey: string, type: (...arg: Object[]) => object): () => void {
     return function (): Object[] {
         if (!this.properties.hasOwnProperty(curKey)) {
-            let defCollection: Object[] = getObjectArray(this, curKey, defaultValue, type);
+            let defCollection: Object[] = getObjectArray(this, curKey, defaultValue, type, false);
             this.properties[curKey] = defCollection;
         }
         return this.properties[curKey];
     };
 }
 
-function complexArraySetter(defaultValue: Object[], curKey: string, type: (...arg: Object[]) => void): (arg: Object) => void {
+function complexArraySetter(defaultValue: Object[], curKey: string, type: (...arg: Object[]) => object): (arg: Object) => void {
     return function (newValue: Object[]): void {
-        let oldValueCollection: Object[] = getObjectArray(this, curKey, defaultValue, type);
+        let oldValueCollection: Object[] = getObjectArray(this, curKey, defaultValue, type, false);
         let newValCollection: Object[] = getObjectArray(this, curKey, newValue, type, true);
+        this.saveChanges(curKey, newValCollection, oldValueCollection);
+        this.properties[curKey] = newValCollection;
+    };
+}
+
+function complexArrayFactorySetter(
+    defaultValue: Object[],
+    curKey: string,
+    type: (...arg: Object[]) => void): (arg: Object) => void {
+    return function (newValue: Object[]): void {
+        let oldValueCollection: Object[] = getObjectArray(this, curKey, defaultValue, <(...arg: Object[]) => object>type, false, true);
+        let newValCollection: Object[] = getObjectArray(this, curKey, newValue, <(...arg: Object[]) => object>type, true, true);
         this.saveChanges(curKey, newValCollection, oldValueCollection);
         this.properties[curKey] = newValCollection;
     };
@@ -242,6 +270,30 @@ export function Complex<T>(defaultValue: T, type: Function): PropertyDecorator {
 
 
 /**
+ * Method used to create complex Factory property. General syntax below.
+ * @param  {Function} defaultType - Specifies the default value of property.
+ * @param  {Function} type - Specifies the class factory type of complex object.
+ * ```
+ * @ComplexFactory(defaultType, factoryFunction)
+ * propertyName: Type1 | Type2;
+ * ```
+ */
+export function ComplexFactory(defaultType: Function, type: Function): PropertyDecorator {
+    return (target: Object, key: string) => {
+        let propertyDescriptor: Object = {
+            set: complexFactorySetter({}, key, <FunctionConstructor>type),
+            get: complexGetter({}, key, <FunctionConstructor>defaultType),
+            enumerable: true,
+            configurable: true
+        };
+
+        //new property creation
+        Object.defineProperty(target, key, propertyDescriptor);
+        addPropertyCollection(<BuildInfo>target, key, 'complexProp', {}, <Function>type);
+    };
+}
+
+/**
  * Method used to create complex array property. General syntax below.
  * @param  {T[]} defaultValue - Specifies the default value of property.
  * @param  {Function} type - Specifies the class type of complex object.
@@ -265,6 +317,31 @@ export function Collection<T>(defaultValue: T[], type: Function): PropertyDecora
         addPropertyCollection(<BuildInfo>target, key, 'colProp', defaultValue, <Function>type);
     };
 }
+
+/**
+ * Method used to create complex factory array property. General syntax below.
+ * @param  {T[]} defaultType - Specifies the default type of property.
+ * @param  {Function} type - Specifies the class type of complex object.
+ * ```
+ * @Collection([], Type);
+ * propertyName: Type;
+ * ```
+ */
+export function CollectionFactory(defaultType: Function, type: Function): PropertyDecorator {
+    return (target: Object, key: string) => {
+        let propertyDescriptor: Object = {
+            set: complexArrayFactorySetter([], key, <FunctionConstructor>type),
+            get: complexArrayGetter([], key, <FunctionConstructor>defaultType),
+            enumerable: true,
+            configurable: true
+        };
+
+        //new property creation
+        Object.defineProperty(target, key, propertyDescriptor);
+        addPropertyCollection(<BuildInfo>target, key, 'colProp', {}, <Function>type);
+    };
+}
+
 
 
 /** 

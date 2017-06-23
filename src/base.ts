@@ -7,9 +7,11 @@ export interface DomElements extends HTMLElement {
 }
 
 /* tslint:disable:no-any */
+
 export interface AngularEventEmitter {
     subscribe?: (generatorOrNext?: any, error?: any, complete?: any) => any;
 }
+
 export declare type EmitType<T> = AngularEventEmitter & ((arg?: T, ...rest: any[]) => void);
 /* tslint:enable:no-any */
 
@@ -25,6 +27,7 @@ export abstract class Base<ElementType extends HTMLElement> {
     protected properties: { [key: string]: Object } = {};
     protected changedProperties: { [key: string]: Object } = {};
     protected oldProperties: { [key: string]: Object } = {};
+    protected refreshing: boolean = false;
     // tslint:disable-next-line:no-empty
     protected finalUpdate: Function = (): void => { };
     protected modelObserver: Observer;

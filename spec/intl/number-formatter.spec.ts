@@ -3,8 +3,8 @@
  */
 import '../../node_modules/es6-promise/dist/es6-promise';
 import { cldrData } from '../../src/internationalization';
-import { NumberFormat } from '../../src/Internationalization/number-formatter';
-import { IntlBase } from '../../src/Internationalization/intl-base';
+import { NumberFormat } from '../../src/intl/number-formatter';
+import { IntlBase } from '../../src/intl/intl-base';
 let numberFormat: NumberFormat = new NumberFormat();
 describe('Number formatter', () => {
     let formatter: Function;

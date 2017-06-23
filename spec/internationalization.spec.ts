@@ -2,8 +2,8 @@
  * Spec for internationalization.
  */
 import { Internationalization, setCulture, setCurrencyCode, getNumericObject, getDefaultDateObject } from '../src/internationalization';
-import { monthDayMatch } from './Internationalization/date-parser.spec';
-import { IntlBase as base } from '../src/Internationalization/intl-base';
+import { monthDayMatch } from './intl/date-parser.spec';
+import { IntlBase as base } from '../src/intl/intl-base';
 describe('Internationalization', () => {
     beforeAll(() => {
         setCulture('en-US');

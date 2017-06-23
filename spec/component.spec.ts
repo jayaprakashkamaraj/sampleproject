@@ -699,7 +699,7 @@ describe('Component', () => {
             document.body.innerHTML = '';
         });
         it('Check destroy event trigger properly ', () => {
-            let spy: jasmine.Spy = jasmine.createSpy('created');
+            let spy: jasmine.Spy = jasmine.createSpy('destroyed');
             let elem: HTMLElement = createElement('div', { id: 'myStyleDiv1' });
             document.body.appendChild(elem);
             let styleObj: Styler = new Styler({ size: '25px', destroyed: spy }, elem);
@@ -733,6 +733,27 @@ describe('Component', () => {
     afterAll(() => {
         (<any>Styler1.prototype).injectedModules = [];
     });
+
+    describe('refresh component', () => {
+        let elem: HTMLElement = createElement('div');
+        let refComponent: Styler;
+        beforeAll(() => {
+            refComponent = new Styler();
+            refComponent.appendTo(elem);
+
+        });
+        it('before refresh', () => {
+            expect(elem.classList.contains('e-control')).toBe(true);
+            expect(elem.classList.contains('e-styler')).toBe(true);
+
+        });
+        it('after refresh', () => {
+            refComponent.refresh();
+            expect(elem.classList.contains('e-control')).toBe(true);
+            expect(elem.classList.contains('e-styler')).toBe(true);
+        });
+    });
+    
     describe('set element id', () => {
         let elem: HTMLElement = createElement('div');
         it('needsID, id dont exist', () => {

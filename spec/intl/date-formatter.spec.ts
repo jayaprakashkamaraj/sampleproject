@@ -1,11 +1,11 @@
 /**
  * 
  */
-import { DateFormat } from '../../src/Internationalization/date-formatter';
-import { DateParser } from '../../src/Internationalization/date-parser';
+import { DateFormat } from '../../src/intl/date-formatter';
+import { DateParser } from '../../src/intl/date-parser';
 import { dateMatched, dupCulObject } from './date-parser.spec';
 import { loadCldr, cldrData } from '../../src/internationalization';
-import { ParserBase } from '../../src/Internationalization/parser-base';
+import { ParserBase } from '../../src/intl/parser-base';
 
 loadCldr(dupCulObject, {});
 const parseCultures: string[] = ['en', 'ar-QA', 'ja'];

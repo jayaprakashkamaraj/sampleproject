@@ -81,7 +81,7 @@ export interface DropObject {
  */
 export interface Instance extends HTMLElement {
     /**
-     * specifies current instance collection in element
+     * Specifies current instance collection in element
      */
     ej2_instances: { [key: string]: Object }[];
 }

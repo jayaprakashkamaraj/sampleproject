@@ -32,6 +32,13 @@ let operaUa: string = 'Mozilla/5.0 (Windows NT 6.3; WOW64) ' +
 
 let panthomUa: string = 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1';
 
+let iosChromeUa: string = 'Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) ' +
+    'AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1';
+
+let iosWebViewUa: string = 'User-Agent: Mozilla/5.0 (iPad; U; CPU OS 4_3_2 like Mac OS X; en-us) ' +
+    'AppleWebKit/533.17.9 (KHTML, like Gecko) Mobile';
+
+let winRTUa: string = 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; ARM; Trident/6.0)';
 // For Code Cover
 
 let curBrowser: Browser = new Browser();
@@ -329,6 +336,90 @@ describe('Browser', (): void => {
         });
     });
 
+    describe('IOS mobile chrome uA', (): void => {
+        beforeAll(() => {
+            Browser.userAgent = iosChromeUa;
+        });
+        it('browser name', (): void => {
+            expect(Browser.info.name).toBe('chrome');
+        });
+        it('browser version', (): void => {
+            expect(Browser.info.version).toBe('56.0.2924.75');
+        });
+        it('browser culture language', (): void => {
+            expect(Browser.info.culture.language).toBe(navigator.language);
+        });
+        it('isAndroid', (): void => {
+            expect(Browser.isAndroid).toBe(false);
+        });
+        it('isDevice', (): void => {
+            expect(Browser.isDevice).toBe(true);
+        });
+        it('isIE', (): void => {
+            expect(Browser.isIE).toBe(false);
+        });
+        it('isIos', (): void => {
+            expect(Browser.isIos).toBe(true);
+        });
+        it('isIos7', (): void => {
+            expect(Browser.isIos7).toBe(false);
+        });
+        it('isMSPointer', (): void => {
+            expect(Browser.isMSPointer).toBe(false);
+        });
+        it('isPointer', (): void => {
+            expect(Browser.isPointer).toBe(false);
+        });
+        it('isTouch', (): void => {
+            expect(Browser.isTouch).toBe('ontouchstart' in window);
+        });
+        it('isWindows', (): void => {
+            expect(Browser.isWindows).toBe(false);
+        });
+    });
+
+    describe('IOS webview uA', (): void => {
+        beforeAll(() => {
+            Browser.userAgent = iosWebViewUa;
+        });
+        it('browser name', (): void => {
+            expect(Browser.info.name).toBe('webkit');
+        });
+        it('browser version', (): void => {
+            expect(Browser.info.version).toBe('533.17.9');
+        });
+        it('browser culture language', (): void => {
+            expect(Browser.info.culture.language).toBe(navigator.language);
+        });
+        it('isAndroid', (): void => {
+            expect(Browser.isAndroid).toBe(false);
+        });
+        it('isDevice', (): void => {
+            expect(Browser.isDevice).toBe(true);
+        });
+        it('isIE', (): void => {
+            expect(Browser.isIE).toBe(false);
+        });
+        it('isIos', (): void => {
+            expect(Browser.isIos).toBe(true);
+        });
+        it('isIos7', (): void => {
+            expect(Browser.isIos7).toBe(false);
+        });
+        it('isMSPointer', (): void => {
+            expect(Browser.isMSPointer).toBe(false);
+        });
+        it('isPointer', (): void => {
+            expect(Browser.isPointer).toBe(false);
+        });
+        it('isTouch', (): void => {
+            expect(Browser.isTouch).toBe('ontouchstart' in window);
+        });
+        it('isWindows', (): void => {
+            expect(Browser.isWindows).toBe(false);
+        });
+    });
+
     describe('IE browser uA', (): void => {
         beforeAll(() => {
             Browser.userAgent = ieUa;
@@ -416,7 +507,7 @@ describe('Browser', (): void => {
             expect(Browser.isWebView).toBe(false);
         });
     });
-    
+
     describe('Safari browser uA', (): void => {
         beforeAll(() => {
             Browser.userAgent = safariUa;

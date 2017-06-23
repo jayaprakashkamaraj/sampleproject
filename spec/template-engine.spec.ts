@@ -23,10 +23,10 @@ window.getName = function () {
 let outDOM: Function = (tempFunction: Function, data: Object[]) => {
     let output: any[] = [];
     for (let item of data) {
-        let htmlEle: HTMLElement = createElement('div', { innerHTML: tempFunction(item) });
-        output.push(htmlEle.children[0]);
+        let htmlEle: HTMLCollection = tempFunction(item);
+        output = output.concat(Array.prototype.slice.call(htmlEle));
     }
-    return output;
+    return output.concat([]);
 }
 
 describe('Template Engine', () => {
@@ -37,7 +37,8 @@ describe('Template Engine', () => {
         let result: Element[] = [];
         result.push(createElement('div', { innerHTML: 'one' }));
         result.push(createElement('div', { innerHTML: 'two' }));
-        expect(outDOM(template.compile(templateStr), dsJSONArray)).toEqual(result);
+        let res: any = outDOM(template.compile(templateStr), dsJSONArray);
+        expect(res).toEqual(result);
     });
 
     it('JSON Array input with multiple key mapping String', () => {
@@ -46,6 +47,13 @@ describe('Template Engine', () => {
         result.push(createElement('div', { innerHTML: 'one01' }));
         result.push(createElement('div', { innerHTML: 'two02' }));
         expect(outDOM(template.compile(templateStr), dsJSONArray)).toEqual(result);
+    });
+
+    it('Table tag with custom parent tag', () => {
+        let templateStr: string = '<tr><td><span>${name}</span></td><td><span>${info.id}</span></td></tr>';
+        let result: any = outDOM(template.compile(templateStr), dsJSONArray);
+        expect(result[0].firstElementChild.tagName.toLowerCase()).toEqual('tr');
+        expect(result[1].firstElementChild.tagName.toLowerCase()).toEqual('tr');
     });
 
 

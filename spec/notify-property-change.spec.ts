@@ -1,4 +1,8 @@
-import { Property, Complex, Collection, NotifyPropertyChanges, INotifyPropertyChanged, CreateBuilder, Event } from '../src/notify-property-change';
+import {
+    Property, Complex, ComplexFactory,
+    Collection, CollectionFactory, NotifyPropertyChanges,
+    INotifyPropertyChanged, CreateBuilder, Event
+} from '../src/notify-property-change';
 import { Base } from '../src/base';
 import { createElement } from '../src/dom';
 import { ChildProperty } from '../src/child-property';
@@ -40,10 +44,12 @@ interface BookModel {
     author?: string;
     level2event?: Function;
     bookData?: BookInfoModel;
+    type?: string;
 }
 interface BookInfoModel {
     accessId?: string;
     flag?: boolean;
+    type?: string;
 }
 interface SubjectModel {
     name?: string;
@@ -135,7 +141,20 @@ class Series extends ChildProperty<Series> {
     public points: PointsModel[];
 }
 
+let getType: Function = (obj: any): Object => {
+    switch (obj.type) {
+        case "Book":
+            return Book;
+        case "Info":
+            return BookInfo;
+        default:
+            return Subject;
+    }
+};
 
+interface GetType {
+    type: string
+}
 
 let defaulEvent: jasmine.Spy = jasmine.createSpy('defaultEvent');
 /**
@@ -156,11 +175,17 @@ class DemoClass extends Base<HTMLElement> implements INotifyPropertyChanged {
     @Property({ text: 'check' })
     public property4: Object;
 
+    @ComplexFactory(Subject, getType)
+    public allType: SubjectModel | BookModel | BookInfoModel | GetType;
+
     @Complex<SubjectModel>({ name: 'Book1' }, Subject)
     public subject1: SubjectModel;
 
     @Complex<SubjectModel>({ name: 'Book1', preferedBook: { bookData: { accessId: 'snm' } } }, Subject2)
     public subject2: SubjectModel;
+
+    @CollectionFactory(Subject, getType)
+    public allTypeCollection: SubjectModel[] | BookModel[] | BookInfoModel[] | GetType[];
 
     @Collection<SubjectModel>([{ subID: 'snm', subScore: 2 }, {
         subID: 'test2', subScore: 34, preferedBook: { author: 'syncf', name: 'setter' }
@@ -569,8 +594,73 @@ describe('NotifyProperty', () => {
                 expect(eve1).not.toHaveBeenCalled();
             });
         });
+
     });
 
+    describe('complex factory decorators', () => {
+
+        let eventObj: DemoClass;
+        beforeEach(() => {
+            eventObj = new DemoClass({}, ele);
+
+        });
+        it('get default class', () => {
+            expect(eventObj.allType instanceof Subject).toBe(true);
+        });
+        it('set type class', () => {
+            eventObj.allType = { name: '01', type: 'Book' };
+            expect(eventObj.allType instanceof Book).toBe(true);
+        });
+        it('property change', () => {
+            spyOn(eventObj, 'onPropertyChanged');
+            (eventObj.allType as SubjectModel).subID = '02';
+            eventObj.dataBind();
+            expect(eventObj.onPropertyChanged).toHaveBeenCalled();
+            expect((eventObj.allType as SubjectModel).subID).toBe('02');
+        });
+
+    });
+
+    describe('collection factory decorators', () => {
+
+        let eventObj: DemoClass;
+        beforeEach(() => {
+            eventObj = new DemoClass({}, ele);
+
+        });
+        it('set default class', () => {
+            eventObj.allTypeCollection = <BookModel[]>[
+                { bookID: '01', name: 'Book1', type: 'Book' },
+                { bookID: '02', name: 'Book2', type: 'Book' }
+            ]
+            expect(eventObj.allTypeCollection[0] instanceof Book).toBe(true);
+            expect(eventObj.allTypeCollection[1] instanceof Book).toBe(true);
+        });
+        it('property change', () => {
+            eventObj.allTypeCollection = <BookModel[]>[
+                { bookID: '01', name: 'Book1', type: 'Book' },
+                { bookID: '02', name: 'Book2', type: 'Book' }
+            ]
+            eventObj.dataBind();
+            spyOn(eventObj, 'onPropertyChanged');
+            (<BookModel>eventObj.allTypeCollection[0]).bookID = '02';
+            eventObj.dataBind();
+            expect(eventObj.onPropertyChanged).toHaveBeenCalledWith(
+                { allTypeCollection: { 0: { bookID: '02' } } },
+                { allTypeCollection: { 0: { bookID: '01' } } });
+        });
+        it('set another type', () => {
+            eventObj.allTypeCollection = <BookInfoModel[]>[
+                { accessId: '001', type: 'Info' },
+                { accessId: '002', type: 'Info' }
+            ];
+            eventObj.dataBind();
+            expect(eventObj.allTypeCollection[0] instanceof BookInfo).toBe(true);
+            expect(eventObj.allTypeCollection[1] instanceof BookInfo).toBe(true);
+
+        });
+
+    });
 });
 
 

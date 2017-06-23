@@ -1,10 +1,10 @@
 /**
  * Spec for date parser.
  */
-import { DateParser } from '../../src/Internationalization/date-parser';
-import { ParserBase } from '../../src/Internationalization/parser-base';
+import { DateParser } from '../../src/intl/date-parser';
+import { ParserBase } from '../../src/intl/parser-base';
 import { loadCldr, Internationalization, DateFormatOptions, cldrData } from '../../src/internationalization';
-import { DateFormat } from '../../src/Internationalization/date-formatter';
+import { DateFormat } from '../../src/intl/date-formatter';
 import { isNullOrUndefined } from '../../src/util';
 import '../../node_modules/es6-promise/dist/es6-promise';
 import { Ajax } from '../../src/ajax';
@@ -111,9 +111,9 @@ export function loadCultureFiles(name: string, base?: boolean): void {
         let val: Object;
         let ajax: Ajax;
         if (base) {
-            ajax = new Ajax('base/spec/Internationalization/cldr/supplemental/' + prop, 'GET', false);
+            ajax = new Ajax('base/spec/intl/cldr/supplemental/' + prop, 'GET', false);
         } else {
-            ajax = new Ajax('base/spec/Internationalization/cldr/main/' + name + '/' + prop, 'GET', false);
+            ajax = new Ajax('base/spec/intl/cldr/main/' + name + '/' + prop, 'GET', false);
         }
         ajax.onSuccess = (value: JSON) => {
             val = value;

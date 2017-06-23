@@ -1,5 +1,5 @@
-import { NumberParser } from '../../src/Internationalization/number-parser';
-import { NumberFormat } from '../../src/Internationalization/number-formatter';
+import { NumberParser } from '../../src/intl/number-parser';
+import { NumberFormat } from '../../src/intl/number-formatter';
 import { NumberFormatOptions, cldrData } from '../../src/internationalization';
 import { extend } from '../../src/util';
 const nCultures: string[] = ['en', 'ar-QA', 'ja'];

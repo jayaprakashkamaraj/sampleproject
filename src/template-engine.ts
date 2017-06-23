@@ -3,6 +3,9 @@
  * Template Engine Bridge
  */
 import { compile as render } from './template';
+import { createElement } from './dom';
+
+const HAS_ROW: RegExp = /^[\n\r.]+\<tr|^\<tr/;
 
 /**
  * Interface for Template Engine.
@@ -16,8 +19,14 @@ export interface ITemplateEngine {
  * @param  {string} templateString - The template string which is going to convert.
  * @param  {Object} helper? - Helper functions as an object.
  */
-export function compile(templateString: string, helper?: Object): (data: Object | JSON) => string {
-    return engineObj.compile(templateString, helper);
+export function compile(templateString: string, helper?: Object): (data: Object | JSON) => HTMLCollection {
+
+    let compiler: (data: Object) => string = engineObj.compile(templateString, helper);
+    return (data: Object): HTMLCollection => {
+        let result: string = '' + compiler(data);
+        let ele: HTMLElement = createElement((HAS_ROW.test(result) ? 'table' : 'div'), { innerHTML: result });
+        return ele.children;
+    };
 }
 
 /**
@@ -30,7 +39,7 @@ export function setTemplateEngine(classObj: ITemplateEngine): void {
 
 //Default Engine Class
 class Engine implements ITemplateEngine {
-    public compile(templateString: string, helper?: Object): (data: Object | JSON) => string {
+    public compile(templateString: string, helper: Object = {}): (data: Object | JSON) => string {
         return render(templateString, helper);
     }
 }
