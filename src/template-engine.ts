@@ -20,12 +20,11 @@ export interface ITemplateEngine {
  * @param  {Object} helper? - Helper functions as an object.
  */
 export function compile(templateString: string, helper?: Object): (data: Object | JSON) => HTMLCollection {
-
     let compiler: (data: Object) => string = engineObj.compile(templateString, helper);
     return (data: Object): HTMLCollection => {
         let result: string = '' + compiler(data);
         let ele: HTMLElement = createElement((HAS_ROW.test(result) ? 'table' : 'div'), { innerHTML: result });
-        return ele.children;
+        return <HTMLCollection>ele.childNodes;
     };
 }
 

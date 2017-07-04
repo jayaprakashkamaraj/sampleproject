@@ -16,17 +16,20 @@ export abstract class Component<ElementType extends HTMLElement> extends Base<El
     private detectFunction: Function;
     /**
      * Enable or disable persisting component's state between page reloads.
+     * @default false
      */
     @Property(false)
     public enablePersistence: boolean;
 
     /**
      * Enable or disable rendering component in right to left direction.
+     * @default false
      */
     @Property()
     public enableRtl: boolean;
     /**
-     * Overrides the global culture and localization value for this component.
+     * Overrides the global culture and localization value for this component. Default Global culture is 'en-US'
+     * @default undefined
      */
     @Property()
     public locale: string;
@@ -98,7 +101,7 @@ export abstract class Component<ElementType extends HTMLElement> extends Base<El
     }
 
     /**
-     * Apply the pending property changes immediately to the component
+     * When invoked applies the pending property changes immediately to the component.
      */
     public dataBind(): void {
         this.injectModules();

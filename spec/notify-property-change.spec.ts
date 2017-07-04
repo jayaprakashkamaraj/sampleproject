@@ -175,7 +175,7 @@ class DemoClass extends Base<HTMLElement> implements INotifyPropertyChanged {
     @Property({ text: 'check' })
     public property4: Object;
 
-    @ComplexFactory(Subject, getType)
+    @ComplexFactory(getType)
     public allType: SubjectModel | BookModel | BookInfoModel | GetType;
 
     @Complex<SubjectModel>({ name: 'Book1' }, Subject)
@@ -184,7 +184,7 @@ class DemoClass extends Base<HTMLElement> implements INotifyPropertyChanged {
     @Complex<SubjectModel>({ name: 'Book1', preferedBook: { bookData: { accessId: 'snm' } } }, Subject2)
     public subject2: SubjectModel;
 
-    @CollectionFactory(Subject, getType)
+    @CollectionFactory(getType)
     public allTypeCollection: SubjectModel[] | BookModel[] | BookInfoModel[] | GetType[];
 
     @Collection<SubjectModel>([{ subID: 'snm', subScore: 2 }, {

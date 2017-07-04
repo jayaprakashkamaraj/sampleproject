@@ -177,6 +177,12 @@ function complexSetter(defaultValue: Object, curKey: string, type: (...arg: Obje
         getObject(this, curKey, defaultValue, type).setProperties(newValue);
     };
 }
+function complexFactoryGetter<T>(defaultValue: Object, curKey: string, type: FunctionConstructor): () => void {
+    return function (): Object {
+        let curType: Function = (<(arg: Object) => Function>type)({});
+        return getObject(this, curKey, defaultValue, <FunctionConstructor>curType);
+    };
+}
 
 function complexFactorySetter(
     defaultValue: Object,
@@ -216,6 +222,21 @@ function complexArrayFactorySetter(
         let newValCollection: Object[] = getObjectArray(this, curKey, newValue, <(...arg: Object[]) => object>type, true, true);
         this.saveChanges(curKey, newValCollection, oldValueCollection);
         this.properties[curKey] = newValCollection;
+    };
+}
+
+function complexArrayFactoryGetter(
+    defaultValue: Object[],
+    curKey: string,
+    type: FunctionConstructor
+): () => void {
+    return function (): Object[] {
+        let curType: Function = (<(arg: Object) => Function>type)({});
+        if (!this.properties.hasOwnProperty(curKey)) {
+            let defCollection: Object[] = getObjectArray(this, curKey, defaultValue, <FunctionConstructor>curType, false);
+            this.properties[curKey] = defCollection;
+        }
+        return this.properties[curKey];
     };
 }
 
@@ -278,11 +299,11 @@ export function Complex<T>(defaultValue: T, type: Function): PropertyDecorator {
  * propertyName: Type1 | Type2;
  * ```
  */
-export function ComplexFactory(defaultType: Function, type: Function): PropertyDecorator {
+export function ComplexFactory(type: Function): PropertyDecorator {
     return (target: Object, key: string) => {
         let propertyDescriptor: Object = {
             set: complexFactorySetter({}, key, <FunctionConstructor>type),
-            get: complexGetter({}, key, <FunctionConstructor>defaultType),
+            get: complexFactoryGetter({}, key, <FunctionConstructor>type),
             enumerable: true,
             configurable: true
         };
@@ -327,11 +348,11 @@ export function Collection<T>(defaultValue: T[], type: Function): PropertyDecora
  * propertyName: Type;
  * ```
  */
-export function CollectionFactory(defaultType: Function, type: Function): PropertyDecorator {
+export function CollectionFactory(type: Function): PropertyDecorator {
     return (target: Object, key: string) => {
         let propertyDescriptor: Object = {
             set: complexArrayFactorySetter([], key, <FunctionConstructor>type),
-            get: complexArrayGetter([], key, <FunctionConstructor>defaultType),
+            get: complexArrayFactoryGetter([], key, <FunctionConstructor>type),
             enumerable: true,
             configurable: true
         };
