@@ -3,6 +3,14 @@ A common package of Essential JS 2 base libraries, methods and class definitions
 ## Resources
 [Demos](http://ej2.syncfusion.com/demos/) 
 
+# undefined
+
+## Bug Fixes
+
+- Resolved DateParser issue in Chinese culture, when the date string is in 12 hours format.
+
+
+
 ## Installing
 
 To install all dependent packages, use the below command
