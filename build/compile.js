@@ -76,9 +76,6 @@ function runBuild(packName) {
     delete pack.scripts;
     delete pack.devDependencies['@syncfusion/ej2-build'];
 
-    // rewrite current package.json
-    fs.writeFileSync('./package.json', JSON.stringify(pack, null, '\t'));
-
     // update readme with changelog
     if (fs.existsSync('./CHANGELOG.md')) {
         var changelog = fs.readFileSync('./CHANGELOG.md', 'utf8');
@@ -91,7 +88,7 @@ function runBuild(packName) {
             changelog = changelog.replace(headers[i], '#' + headers[i]);
         }
         // updated readme file and remove changelog file
-        fs.writeFile('./ReadMe.md', fs.readFileSync('./ReadMe.md', 'utf8') + '\n\n' + changelog);
+        fs.writeFileSync('./ReadMe.md', fs.readFileSync('./ReadMe.md', 'utf8') + '\n\n' + changelog);
         shelljs.rm('-rf', './CHANGELOG.md');
     }
 
@@ -99,7 +96,10 @@ function runBuild(packName) {
 
     // install ej2-build
     common.setNpmrc();
-    shelljs.exec('yarn add @syncfusion/ej2-build');
+    shelljs.exec('yarn add @syncfusion/ej2-build -D');
+    
+    // rewrite current package.json
+    fs.writeFileSync('./package.json', JSON.stringify(pack, null, '\t'));
 
     // install dependent packages
     common.updateNpmrc();
