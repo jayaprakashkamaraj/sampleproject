@@ -66,7 +66,7 @@ function runBuild(packName) {
         for (var i = 0; i < depKeys.length; i++) {
             if (depKeys[i].indexOf('@syncfusion/') !== -1) {
                 var dependency = depKeys[i].replace('@syncfusion/', '');
-                pack.dependencies[depKeys[i]] = common.getReference(dependency);
+                pack.dependencies[depKeys[i]] = '^' + common.getReference(dependency);
             }
         }
     }
