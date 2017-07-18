@@ -96,7 +96,7 @@ function runBuild(packName) {
 
     // install ej2-build
     common.setNpmrc();
-    shelljs.exec('yarn add @syncfusion/ej2-build -D');
+    shelljs.exec('npm install @syncfusion/ej2-build');
     
     // rewrite current package.json
     fs.writeFileSync('./package.json', JSON.stringify(pack, null, '\t'));
