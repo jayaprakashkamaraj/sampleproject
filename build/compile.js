@@ -36,23 +36,23 @@ function runBuild(packName) {
     var pack = common.getJSON('./package.json');
     // check current changelog
     var changelog = common.getChangelog(packName, './');
-    if (!changelog || (changelog && !changelog.length)) {
-        common.updateReport(packName, 'isExcluded', true);
-        // navigate to root directory
-        shelljs.cd('../../');
-        var install = build = publish = shelljs.exec('echo none', { silent: true });
-        writeResults(install, build, publish, packName);
-        // update excluded package details
-        common.updateRelease(packName, pack.version, 'excluded');
-        // exit from current package
-        console.log('\nExcluded From Release\n');
-        console.log('\n\nExited from ./repositories/' + packName + '\n\n');
-        console.log('****************************************************');
-        return;
-    } else {
+    // if (!changelog || (changelog && !changelog.length)) {
+    //     common.updateReport(packName, 'isExcluded', true);
+    //     // navigate to root directory
+    //     shelljs.cd('../../');
+    //     var install = build = publish = shelljs.exec('echo none', { silent: true });
+    //     writeResults(install, build, publish, packName);
+    //     // update excluded package details
+    //     common.updateRelease(packName, pack.version, 'excluded');
+    //     // exit from current package
+    //     console.log('\nExcluded From Release\n');
+    //     console.log('\n\nExited from ./repositories/' + packName + '\n\n');
+    //     console.log('****************************************************');
+    //     return;
+    // } else {
         common.updateReport(packName, 'isExcluded', false);
         common.updateRelease(packName, pack.version, 'included');
-    }
+    //}
 
     // change current package version
     console.log('Current Version: ' + process.env.releaseVersion);
@@ -78,6 +78,22 @@ function runBuild(packName) {
 
     // rewrite current package.json
     fs.writeFileSync('./package.json', JSON.stringify(pack, null, '\t'));
+
+    // update readme with changelog
+    if (fs.existsSync('./CHANGELOG.md')) {
+        var changelog = fs.readFileSync('./CHANGELOG.md', 'utf8');
+        // get release date as iso formatted
+        var date = new Date(process.env.releaseDate).toISOString().substring(0, 10);
+        changelog = changelog.replace('[Unreleased]', process.env.releaseVersion + ' (' + date + ')');
+        // increase header for readme content
+        var headers = changelog.match(/^#.*$/gm);
+        for (var i = 0; i < headers.length; i++) {
+            changelog = changelog.replace(headers[i], '#' + headers[i]);
+        }
+        // updated readme file and remove changelog file
+        fs.writeFile('./ReadMe.md', fs.readFileSync('./ReadMe.md', 'utf8') + '\n\n' + changelog);
+        shelljs.rm('-rf', './CHANGELOG.md');
+    }
 
     console.log(pack.dependencies);
 
