@@ -111,9 +111,10 @@ function runBuild(packName) {
         buildScripts = 'gulp build && gulp global-scripts';
     }
     var build = shelljs.exec(buildScripts, { silent: false });
-
+    
+    // publish current package in npm
     common.updateNpmrc(true);
-    var publish = shelljs.exec('npm publish');
+    var publish = shelljs.exec('npm publish', { silent: false });
 
     // navigate to root directory
     shelljs.cd('../../');

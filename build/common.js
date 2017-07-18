@@ -15,9 +15,9 @@ exports.setNpmrc = function() {
 exports.updateNpmrc = function(isPrivate) {
     var npmrc;
     if (isPrivate) {
-        var registry = '//nexus.syncfusion.com/';
+        var registry = '//nexus.syncfusion.com/repository/ej2-release/';
         var npmrc = 'registry=https://registry.npmjs.org/\n' +
-            '@syncfusion:registry=http:' + registry + 'repository/ej2-release/\n' +
+            '@syncfusion:registry=http:' + registry + '\n' +
             registry + ':username=' + process.env.PRIVATE_NPM_USER + '\n' +
             registry + ':_password=' + process.env.PRIVATE_NPM_PASSWORD + '\n' +
             registry + ':email=' + process.env.PRIVATE_NPM_EMAIL + '\n' +
@@ -76,9 +76,13 @@ var getReport = function(packageName, key) {
 exports.getReport = getReport;
 
 var getReference = function(dependency) {
-    var excluded = getJSON(__dirname + '/../excluded.json');
-    var excludedKeys = Object.keys(excluded);
-    return excludedKeys.indexOf(dependency) !== -1 ? excluded[dependency] : process.env.releaseVersion;
+    var excludePath = __dirname + '/../excluded.json';
+    if (fs.existsSync(excludePath)) {
+        var excluded = getJSON(excludePath);
+        var excludedKeys = Object.keys(excluded);
+        return excludedKeys.indexOf(dependency) !== -1 ? excluded[dependency] : process.env.releaseVersion;
+    }
+    return process.env.releaseVersion;
 }
 exports.getReference = getReference;
 
