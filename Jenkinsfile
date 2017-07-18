@@ -27,7 +27,7 @@ node('EJ2Build') {
         }
 
         stage('Artifact') {
-            archiveArtifacts artifacts: 'output/, included.json, excluded.json', excludes: null
+            archiveArtifacts artifacts: 'output/, included.json, excluded.json, reports.json', excludes: null
         }
 
         deleteDir()
