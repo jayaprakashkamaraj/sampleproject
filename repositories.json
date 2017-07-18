@@ -1,0 +1,20 @@
+{
+
+    "ej2": "ej2",
+    "ej2-base": "ej2-base-library",
+    "ej2-buttons": "ej2-button-components",
+    "ej2-calendars": "ej2-calendar-components",
+    "ej2-charts": "ej2-chart-components",
+    "ej2-data": "ej2-data-manager",
+    "ej2-grids": "ej2-grid-components",
+    "ej2-inputs": "ej2-input-components",
+    "ej2-lists": "ej2-list-components",
+    "ej2-navigations": "ej2-navigation-components",
+    "ej2-ng-base": "ej2-ng-base",
+    "ej2-popups": "ej2-popup-components",
+
+    "ej2-angular-docs": "ej2-angular-docs",
+    "ej2-docs": "ej2-docs",
+    "ej2-samples": "ej2-samples",
+    "ej2-ng-samples": "ej2-ng-samples"
+}

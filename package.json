@@ -1,0 +1,31 @@
+{
+  "name": "ej2-release-automation",
+  "version": "1.0.0",
+  "description": "Release automation for Essential JS 2 components and applications",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.syncfusion.com/essential-studio/ej2-release-automation"
+  },
+  "keywords": [
+    "syncfusion",
+    "ej2-release",
+    "ej2-release-automation"
+  ],
+  "author": "Syncfusion Inc.",
+  "license": "ISC",
+  "devDependencies": {
+        "glob": "^7.1.2",
+        "gulp": "^3.9.1",
+        "require-dir": "^0.3.2",
+        "rimraf": "^2.6.1",
+        "run-sequence": "^1.2.2",
+        "shelljs": "^0.7.8",
+        "tableify": "^1.0.1",
+        "toposort": "^1.0.3"
+    },
+    "scripts": {
+        "build": "gulp build",
+        "compile": "gulp compile",
+        "status": "gulp status"
+    }
+}
