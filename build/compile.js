@@ -38,6 +38,8 @@ function runBuild(packName) {
     var changelog = common.getChangelog(packName, './');
     if (!changelog || (changelog && !changelog.length)) {
         common.updateReport(packName, 'isExcluded', true);
+        var install = build = publish = shelljs.exec('echo none', { silent: true });
+        writeResults(install, build, publish, packName);
         // navigate to root directory
         shelljs.cd('../../');
         // update excluded package details

@@ -3,6 +3,7 @@ output/
 node_modules/
 repositories/
 breaking
+reports.json
 included.json
 excluded.json
 topo-sorted.json

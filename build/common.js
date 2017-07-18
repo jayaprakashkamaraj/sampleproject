@@ -55,18 +55,20 @@ exports.getChangelog = function(packName, packagePath) {
 }
 
 var updateReport = function(packageName, key, value) {
-    var reports = fs.existsSync('./reports.json') ? getJSON('./reports.json') : {};
+    var reportPath = __dirname + '/../reports.json';
+    var reports = fs.existsSync(reportPath) ? getJSON(reportPath) : {};
     if (!reports[packageName]) {
-        reports.packageName = {};
+        reports[packageName] = {};
     }
-    reports.packageName[key] = value;
-    fs.writeFileSync('./reports.json', JSON.stringify(reports, null, '/t'));
+    reports[packageName][key] = value;
+    fs.writeFileSync(reportPath, JSON.stringify(reports, null, '\t'));
 }
 exports.updateReport = updateReport;
 
 var getReport = function(packageName, key) {
-    if (fs.existsSync('./reports.json')) {
-        var reports = getJSON('./reports.json');
+    var reportPath = __dirname + '/../reports.json';
+    if (fs.existsSync(reportPath)) {
+        var reports = getJSON(reportPath);
         return reports[packageName[key]];
     }
     return;
@@ -74,16 +76,16 @@ var getReport = function(packageName, key) {
 exports.getReport = getReport;
 
 var getReference = function(dependency) {
-    var excluded = getJSON(__dirname + 'excluded.json');
+    var excluded = getJSON(__dirname + '/../excluded.json');
     var excludedKeys = Object.keys(excluded);
     return excludedKeys.indexOf(dependency) !== -1 ? excluded[dependency] : process.env.releaseVersion;
 }
 exports.getReference = getReference;
 
 var updateRelease = function(packName, version, decision) {
-    var decisionPath = __dirname + decision + '.json';
-    var finalDecision = fs.existsSync(decisionPath) ? common.getJSON(decisionPath) : {};
+    var decisionPath = __dirname + '/../' + decision + '.json';
+    var finalDecision = fs.existsSync(decisionPath) ? getJSON(decisionPath) : {};
     finalDecision[packName] = version;
-    fs.writeFileSync(decisionPath, JSON.stringify(finalDecision, null, '/t'));
+    fs.writeFileSync(decisionPath, JSON.stringify(finalDecision, null, '\t'));
 }
 exports.updateRelease = updateRelease;
