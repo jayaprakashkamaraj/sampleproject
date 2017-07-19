@@ -111,7 +111,7 @@ exports.updateReadme = updateReadme;
 
 var updatePackageJSON = function() {
     // get current package.json
-    var pack = common.getJSON('./package.json');
+    var pack = getJSON('./package.json');
 
     // change current package version
     console.log('Current Version: ' + process.env.releaseVersion);
