@@ -15,6 +15,7 @@ exports.setNpmrc = function() {
 exports.updateNpmrc = function(isPrivate) {
     var npmrc;
     if (isPrivate) {
+        // write private server settings
         var registry = '//nexus.syncfusion.com/repository/ej2-release/';
         var npmrc = 'registry=https://registry.npmjs.org/\n' +
             '@syncfusion:registry=http:' + registry + '\n' +
@@ -23,6 +24,7 @@ exports.updateNpmrc = function(isPrivate) {
             registry + ':email=' + process.env.PRIVATE_NPM_EMAIL + '\n' +
             registry + ':always-auth=true';
     } else {
+        // write npm server settings
         npmrc = 'registry=https://registry.npmjs.org/';
     }
     fs.writeFileSync('./.npmrc', npmrc);
@@ -53,6 +55,7 @@ exports.getChangelog = getChangelog = function(packName, packagePath) {
     return;
 }
 
+// update release report file
 var updateReport = function(packageName, key, value) {
     var reportPath = __dirname + '/../reports.json';
     var reports = fs.existsSync(reportPath) ? getJSON(reportPath) : {};
@@ -64,6 +67,7 @@ var updateReport = function(packageName, key, value) {
 }
 exports.updateReport = updateReport;
 
+// get a package details from release report
 var getReport = function(packageName, key) {
     var reportPath = __dirname + '/../reports.json';
     if (fs.existsSync(reportPath)) {
@@ -74,6 +78,7 @@ var getReport = function(packageName, key) {
 }
 exports.getReport = getReport;
 
+// get package version based on release decision
 var getVersion = function(dependency) {
     var excludePath = __dirname + '/../excluded.json';
     if (fs.existsSync(excludePath)) {
@@ -85,6 +90,7 @@ var getVersion = function(dependency) {
 }
 exports.getVersion = getVersion;
 
+// set the package is included or excluded for current release
 var updateRelease = function(packName, version, decision) {
     var decisionPath = __dirname + '/../' + decision + '.json';
     var finalDecision = fs.existsSync(decisionPath) ? getJSON(decisionPath) : {};
@@ -93,6 +99,7 @@ var updateRelease = function(packName, version, decision) {
 }
 exports.updateRelease = updateRelease;
 
+// update readme content with changelog
 var updateReadme = function(packName) {
     var changelog = fs.readFileSync('./CHANGELOG.md', 'utf8');
     // get release date as iso formatted
@@ -109,6 +116,7 @@ var updateReadme = function(packName) {
 }
 exports.updateReadme = updateReadme;
 
+// update package.json with release changes
 var updatePackageJSON = function() {
     // get current package.json
     var pack = getJSON('./package.json');

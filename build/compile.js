@@ -81,7 +81,13 @@ function runBuild(packName) {
     // get current package.json
     var pack = common.getJSON('./package.json');
     common.updateReport(packName, 'dependencies', pack.dependencies);
-    var publish = shelljs.exec('npm publish', { silent: false });
+    var publish;
+    // check install and build get succeeded
+    if (install.code === 0 && build.code === 0) {
+        publish = shelljs.exec('npm publish', { silent: false });
+    } else {
+        publish = shelljs.exec('echo none', { silent: false });
+    }
 
     // navigate to root directory
     shelljs.cd('../../');
@@ -122,7 +128,6 @@ function getResult(task) {
         }
         return task.code === 0 ? 'SUCCESS' : 'FAILED';
     }
-
 }
 
 gulp.task('status', function() {
