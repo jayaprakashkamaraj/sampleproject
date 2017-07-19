@@ -78,6 +78,9 @@ function runBuild(packName) {
     // publish current package in npm
     common.updateNpmrc(true);
     common.updatePackageJSON();
+    // get current package.json
+    var pack = common.getJSON('./package.json');
+    common.updateReport(packName, 'dependencies', pack.dependencies);
     var publish = shelljs.exec('npm publish', { silent: false });
 
     // navigate to root directory
