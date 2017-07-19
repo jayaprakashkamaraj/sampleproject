@@ -50,58 +50,21 @@ function runBuild(packName) {
     //     console.log('****************************************************');
     //     return;
     // } else {
-        common.updateReport(packName, 'isExcluded', false);
-        common.updateRelease(packName, pack.version, 'included');
+    common.updateReport(packName, 'isExcluded', false);
+    common.updateRelease(packName, pack.version, 'included');
     //}
-
-    // change current package version
-    console.log('Current Version: ' + process.env.releaseVersion);
-    pack.version = process.env.releaseVersion;
-
-    // get current package dependencies
-    var deps = pack.dependencies;
-    if (deps) {
-        var depKeys = Object.keys(deps);
-        // iterate syncfusion packages and change its reference
-        for (var i = 0; i < depKeys.length; i++) {
-            if (depKeys[i].indexOf('@syncfusion/') !== -1) {
-                var dependency = depKeys[i].replace('@syncfusion/', '');
-                pack.dependencies[depKeys[i]] = '^' + common.getReference(dependency);
-            }
-        }
-    }
-
-    // remove build configs from package.json
-    delete pack.config;
-    delete pack.scripts;
-    delete pack.devDependencies['@syncfusion/ej2-build'];
 
     // update readme with changelog
     if (fs.existsSync('./CHANGELOG.md')) {
-        var changelog = fs.readFileSync('./CHANGELOG.md', 'utf8');
-        // get release date as iso formatted
-        var date = new Date(process.env.releaseDate).toISOString().substring(0, 10);
-        changelog = changelog.replace('[Unreleased]', process.env.releaseVersion + ' (' + date + ')');
-        // increase header for readme content
-        var headers = changelog.match(/^#.*$/gm);
-        for (var i = 0; i < headers.length; i++) {
-            changelog = changelog.replace(headers[i], '#' + headers[i]);
-        }
-        // updated readme file and remove changelog file
-        fs.writeFileSync('./ReadMe.md', fs.readFileSync('./ReadMe.md', 'utf8') + '\n\n' + changelog);
-        shelljs.rm('-rf', './CHANGELOG.md');
+        common.updateReadme(packName);
     }
 
-    console.log(pack.dependencies);
-
-    // install ej2-build
-    common.setNpmrc();
-    shelljs.exec('yarn add @syncfusion/ej2-build');
-
+    // update ej2-build in package devDependencies
+    pack.devDependencies['@syncfusion/ej2-build'] = 'file:../ej2-build';
     // rewrite current package.json
     fs.writeFileSync('./package.json', JSON.stringify(pack, null, '\t'));
 
-    // install dependent packages
+    // install all dependencies
     common.updateNpmrc();
     var install = shelljs.exec('yarn install --pure-lockfile --ignore-optional', { silent: false });
 
@@ -111,9 +74,10 @@ function runBuild(packName) {
         buildScripts = 'gulp build && gulp global-scripts';
     }
     var build = shelljs.exec(buildScripts, { silent: false });
-    
+
     // publish current package in npm
     common.updateNpmrc(true);
+    common.updatePackageJSON();
     var publish = shelljs.exec('npm publish', { silent: false });
 
     // navigate to root directory

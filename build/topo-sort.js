@@ -18,7 +18,7 @@ function getPackages() {
     var glob = require('glob');
     var shelljs = require('shelljs');
     // get all package.json files from repository folder
-    var packages = glob.sync('./repositories/**/package.json');
+    var packages = glob.sync('./repositories/**/package.json', { ignore: './repositories/ej2-build/package.json' });
     var graphs = [];
     for (var i = 0; i < packages.length; i++) {
         if (common.isApplication(packages[i])) {

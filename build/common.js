@@ -40,12 +40,11 @@ var getJSON = function(filePath) {
 exports.getJSON = getJSON;
 
 // Get current package changelog
-exports.getChangelog = function(packName, packagePath) {
+exports.getChangelog = getChangelog = function(packName, packagePath) {
     var changelogPath = packagePath + 'CHANGELOG.md';
     if (fs.existsSync(changelogPath)) {
         var changelog = fs.readFileSync(changelogPath, 'utf8');
-        console.log('Previous Version: ' + process.env.previousVersion);
-        var changeRegex = new RegExp('## \\[Unreleased\\]([\\s\\S]*?)## ' + process.env.previousVersion);
+        var changeRegex = new RegExp('## \\[Unreleased\\]([\\s\\S]*?)## [0-9]');
         var currentChanges = changelog.match(changeRegex);
         currentChanges = currentChanges ? currentChanges[1].trim() : currentChanges;
         updateReport(packName, 'changelog', currentChanges);
@@ -75,7 +74,7 @@ var getReport = function(packageName, key) {
 }
 exports.getReport = getReport;
 
-var getReference = function(dependency) {
+var getVersion = function(dependency) {
     var excludePath = __dirname + '/../excluded.json';
     if (fs.existsSync(excludePath)) {
         var excluded = getJSON(excludePath);
@@ -84,7 +83,7 @@ var getReference = function(dependency) {
     }
     return process.env.releaseVersion;
 }
-exports.getReference = getReference;
+exports.getVersion = getVersion;
 
 var updateRelease = function(packName, version, decision) {
     var decisionPath = __dirname + '/../' + decision + '.json';
@@ -93,3 +92,50 @@ var updateRelease = function(packName, version, decision) {
     fs.writeFileSync(decisionPath, JSON.stringify(finalDecision, null, '\t'));
 }
 exports.updateRelease = updateRelease;
+
+var updateReadme = function(packName) {
+    var changelog = fs.readFileSync('./CHANGELOG.md', 'utf8');
+    // get release date as iso formatted
+    var date = new Date(process.env.releaseDate).toISOString().substring(0, 10);
+    changelog = changelog.replace('[Unreleased]', process.env.releaseVersion + ' (' + date + ')');
+    // increase header for readme content
+    var headers = changelog.match(/^#.*$/gm);
+    for (var i = 0; i < headers.length; i++) {
+        changelog = changelog.replace(headers[i], '#' + headers[i]);
+    }
+    // updated readme file and remove changelog file
+    fs.writeFileSync('./ReadMe.md', fs.readFileSync('./ReadMe.md', 'utf8') + '\n\n' + changelog);
+    shelljs.rm('-rf', './CHANGELOG.md');
+}
+exports.updateReadme = updateReadme;
+
+var updatePackageJSON = function() {
+    // get current package.json
+    var pack = common.getJSON('./package.json');
+
+    // change current package version
+    console.log('Current Version: ' + process.env.releaseVersion);
+    pack.version = process.env.releaseVersion;
+
+    // get current package dependencies
+    var deps = pack.dependencies;
+    if (deps) {
+        var depKeys = Object.keys(deps);
+        // iterate syncfusion packages and change its reference
+        for (var i = 0; i < depKeys.length; i++) {
+            if (depKeys[i].indexOf('@syncfusion/') !== -1) {
+                var dependency = depKeys[i].replace('@syncfusion/', '');
+                pack.dependencies[depKeys[i]] = '^' + getVersion(dependency);
+            }
+        }
+    }
+
+    // remove build configs from package.json
+    delete pack.config;
+    delete pack.scripts;
+    delete pack.devDependencies['@syncfusion/ej2-build'];
+
+    // write package json file
+    fs.writeFileSync('./package.json', JSON.stringify(pack, null, '\t'));
+}
+exports.updatePackageJSON = updatePackageJSON;
